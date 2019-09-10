@@ -4,10 +4,10 @@ import arrow.core.Option
 import arrow.core.Some
 import arrow.core.getOrElse
 import arrow.core.identity
-import arrow.data.ListK
-import arrow.data.k
+import arrow.core.ListK
+import arrow.core.k
 import arrow.core.extensions.monoid
-import arrow.data.extensions.listk.eq.eq
+import arrow.core.extensions.listk.eq.eq
 import arrow.core.extensions.option.eq.eq
 import arrow.test.UnitSpec
 import arrow.test.generators.either
@@ -89,7 +89,7 @@ class PrismTest : UnitSpec() {
 
     testLaws(
       PrismLaws.laws(
-        prism = sumPrism.right<SumType, SumType, String, String, Int>(),
+        prism = sumPrism.right(),
         aGen = Gen.either(Gen.int(), genSum),
         bGen = Gen.either(Gen.int(), Gen.string()),
         funcGen = Gen.functionAToB(Gen.either(Gen.int(), Gen.string())),
@@ -100,7 +100,7 @@ class PrismTest : UnitSpec() {
 
     testLaws(
       PrismLaws.laws(
-        prism = sumPrism.left<SumType, SumType, String, String, Int>(),
+        prism = sumPrism.left(),
         aGen = Gen.either(genSum, Gen.int()),
         bGen = Gen.either(Gen.string(), Gen.int()),
         funcGen = Gen.functionAToB(Gen.either(Gen.string(), Gen.int())),

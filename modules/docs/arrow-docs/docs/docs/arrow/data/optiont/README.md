@@ -51,7 +51,7 @@ that enables monad comprehensions for all datatypes for which a monad instance i
 
 ```kotlin:ank:silent
 import arrow.typeclasses.*
-import arrow.core.extensions.*
+import arrow.mtl.extensions.*
 import arrow.core.extensions.fx
 
 fun getCountryCode(maybePerson : Option<Person>): Option<String> =
@@ -100,8 +100,8 @@ val adressDB: Map<Int, Address> = mapOf(
 Now we've got two new functions in the mix that are going to call a remote service, and they return a `ObservableK`. This is common in most APIs that handle loading asynchronously.
 
 ```kotlin:ank
-import arrow.effects.rx2.*
-import arrow.effects.rx2.extensions.*
+import arrow.fx.rx2.*
+import arrow.fx.rx2.extensions.*
 
 fun findPerson(personId : Int) : ObservableK<Option<Person>> =
   ObservableK.just(Option.fromNullable(personDB.get(personId))) //mock impl for simplicity
@@ -141,7 +141,7 @@ This isn't actually what we want since the inferred return type is `ObservableK<
 Let's look at how a similar implementation would look like using monad comprehensions without transformers:
 
 ```kotlin:ank
-import arrow.effects.rx2.extensions.fx
+import arrow.fx.rx2.extensions.fx
 
 fun getCountryCode(personId: Int): ObservableK<Option<String>> =
        ObservableK.fx {
@@ -180,8 +180,8 @@ So our specialization `OptionT<ForObservableK, A>` is the OptionT transformer ar
 We can now lift any value to a `OptionT<F, A>` which looks like this:
 
 ```kotlin:ank
-import arrow.data.*
-import arrow.effects.rx2.extensions.observablek.applicative.*
+import arrow.mtl.*
+import arrow.fx.rx2.extensions.observablek.applicative.*
 
 val optTVal = OptionT.just<ForObservableK, Int>(ObservableK.applicative(), 1)
 optTVal
@@ -203,9 +203,9 @@ optTVal.value()
 So how would our function look if we implemented it with the OptionT monad transformer?
 
 ```kotlin:ank:silent
-import arrow.effects.rx2.extensions.*
-import arrow.data.extensions.fx
-import arrow.effects.rx2.extensions.observablek.monad.monad
+import arrow.fx.rx2.extensions.*
+import arrow.mtl.extensions.fx
+import arrow.fx.rx2.extensions.observablek.monad.monad
 
 fun getCountryCode(personId: Int): ObservableK<Option<String>> =
    OptionT.fx(ObservableK.monad()) {
@@ -223,7 +223,7 @@ Here we no longer have to deal with the `None` cases, and the binding to the val
 
 ```kotlin:ank:replace
 import arrow.reflect.*
-import arrow.data.*
+import arrow.mtl.*
 import arrow.core.*
 
 DataType(OptionT::class).tcMarkdownList()

@@ -11,9 +11,8 @@ import arrow.core.extensions.option.monoid.monoid
 import arrow.core.extensions.option.monoidal.monoidal
 import arrow.core.extensions.option.show.show
 import arrow.core.extensions.tuple2.eq.eq
-import arrow.mtl.extensions.option.monadFilter.monadFilter
-import arrow.mtl.extensions.option.traverseFilter.traverseFilter
-import arrow.syntax.collections.firstOption
+import arrow.core.extensions.option.monadFilter.monadFilter
+import arrow.core.extensions.option.traverseFilter.traverseFilter
 import arrow.test.UnitSpec
 import arrow.test.generators.option
 import arrow.test.laws.FunctorFilterLaws
@@ -86,6 +85,14 @@ class OptionTest : UnitSpec() {
       none.map(String::toUpperCase) shouldBe None
     }
 
+    "map2" {
+      forAll { a: Int ->
+        val op: Option<Int> = a.some()
+        some.map2(op) { (a, b): Tuple2<String, Int> -> a + b } == Some("kotlin$a")
+        none.map2(op) { (a, b): Tuple2<String, Int> -> a + b } == None
+      }
+    }
+
     "mapNotNull" {
       some.mapNotNull { it.toIntOrNull() } shouldBe None
       some.mapNotNull { it.toUpperCase() } shouldBe Some("KOTLIN")
@@ -137,8 +144,8 @@ class OptionTest : UnitSpec() {
 
     "firstOption" {
       val l = listOf(1, 2, 3, 4, 5, 6)
-      l.firstOption() shouldBe Some(1)
-      l.firstOption { it > 2 } shouldBe Some(3)
+      l.firstOrNone() shouldBe Some(1)
+      l.firstOrNone { it > 2 } shouldBe Some(3)
     }
 
     "and" {

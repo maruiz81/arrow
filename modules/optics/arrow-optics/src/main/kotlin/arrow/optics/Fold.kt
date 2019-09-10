@@ -6,9 +6,9 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import arrow.core.extensions.monoid
-import arrow.data.extensions.listk.monoid.monoid
+import arrow.core.extensions.listk.monoid.monoid
 import arrow.core.identity
-import arrow.data.ListK
+import arrow.core.ListK
 import arrow.higherkind
 import arrow.typeclasses.Const
 import arrow.typeclasses.Foldable
@@ -32,7 +32,7 @@ interface Fold<S, A> : FoldOf<S, A> {
 
   companion object {
 
-    fun <A> id() = Iso.id<A>().asFold()
+    fun <A> id() = PIso.id<A>().asFold()
 
     /**
      * [Fold] that takes either [S] or [S] and strips the choice of [S].
@@ -51,7 +51,7 @@ interface Fold<S, A> : FoldOf<S, A> {
     /**
      * [Fold] that points to nothing
      */
-    fun <A, B> void() = Optional.void<A, B>().asFold()
+    fun <A, B> void() = POptional.void<A, B>().asFold()
 
     /**
      * Create a [Fold] from a [arrow.Foldable]

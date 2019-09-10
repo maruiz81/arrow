@@ -3,14 +3,14 @@ package arrow.optics.instances
 import arrow.core.Option
 import arrow.core.extensions.eq
 import arrow.core.extensions.option.eq.eq
-import arrow.data.ListK
-import arrow.data.MapK
-import arrow.data.NonEmptyList
-import arrow.data.SequenceK
-import arrow.data.extensions.listk.eq.eq
-import arrow.data.extensions.sequencek.eq.eq
+import arrow.core.ListK
+import arrow.core.MapK
+import arrow.core.NonEmptyList
+import arrow.core.SequenceK
+import arrow.core.extensions.listk.eq.eq
+import arrow.core.extensions.sequencek.eq.eq
 import arrow.optics.extensions.ListFilterIndex
-import arrow.optics.extensions.MapFilterIndex
+import arrow.optics.extensions.filterMapIndex
 import arrow.optics.extensions.filterIndex
 import arrow.optics.extensions.listk.filterIndex.filterIndex
 import arrow.optics.extensions.mapk.filterIndex.filterIndex
@@ -85,7 +85,7 @@ class FilterIndexInstanceTest : UnitSpec() {
     ))
 
     testLaws(TraversalLaws.laws(
-      traversal = MapFilterIndex<Char, Int>().filter { true },
+      traversal = filterMapIndex<Char, Int>().filter { true },
       aGen = Gen.map(Gen.char(), Gen.intSmall()),
       bGen = Gen.int(),
       funcGen = Gen.functionAToB(Gen.int()),
